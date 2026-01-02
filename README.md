@@ -30,3 +30,13 @@ L agent a ete deploye sur l instance Ubuntu selon les etapes suivantes :
 L agent a ete deploye sur l instance Windows Server avec les etapes suivantes :
 * Installation de l agent Zabbix via l installeur MSI
 * Configuration du Hostname (Client_Windows_Zabbix) et de l IP du serveur Zappix
+
+### Acces a l interface web de Zabbix via http://ip_Ec2_Zabbix:80
+
+<img width="959" height="539" alt="interface_Zabbix_Web" src="https://github.com/user-attachments/assets/a88828e0-e101-4a80-b407-2aeaa9047bb3" />
+
+## Interface Web Zabbix
+Voici le tableau de bord montrant la disponibilite des hotes (Serveur Zabbix, Client Linux et Client Windows). Le statut vert "ZBX" confirme que la communication est operationnelle :
+
+<img width="959" height="539" alt="Activation_machine_windows_zabbix_web" src="https://github.com/user-attachments/assets/08a68cf3-1a78-4268-8ad5-a71e3ecca34d" />
+
