@@ -2,7 +2,7 @@
 
 ## Description du projet
 Ce projet consiste en la mise en oeuvre d une architecture de supervision centralisee utilisant Zabbix 7.0. L objectif est de surveiller en temps reel les performances et la disponibilite d instances Linux et Windows hebergees sur Amazon EC2.
-
+<img width="1536" height="1024" alt="Architecture_generale" src="https://github.com/user-attachments/assets/a94182b2-258d-43b6-8d9f-9b9c031c7612" />
 ## Architecture de l infrastructure
 * Fournisseur Cloud : Amazon Web Services (AWS)
 * Reseau : Deploiement dans un VPC avec un adressage prive en 10.0.1.0/24
