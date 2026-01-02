@@ -1,51 +1,31 @@
-# D-ploiement-de-Zabbix-conteneuris-pour-le-monitoring-d-un-parc-hybride-Linux-Windows-sous-Cloud-AWS
-Déploiement de Zabbix conteneurisé pour le monitoring d'un parc hybride (Linux & Windows) sous Cloud AWS
+# Déploiement de Zabbix conteneurisé pour le monitoring d'un parc hybride (Linux & Windows) sous Cloud AWS
 
-📝 Description du projet
-Ce projet consiste en la mise en place d'une architecture de supervision centralisée et évolutive au sein du Cloud AWS. L'objectif principal était de garantir une visibilité totale sur la santé et les performances d'un parc informatique hétérogène, composé d'instances Linux et Windows Server.
+## 📝 Description du projet
+Ce projet consiste en la mise en œuvre d'une architecture de supervision centralisée utilisant **Zabbix 7.0**. L'objectif est de monitorer en temps réel les performances et la disponibilité d'un parc informatique hybride (Linux & Windows) hébergé sur des instances **Amazon EC2**.
 
-🏗️ Architecture Technique
-.Fournisseur Cloud : AWS (Amazon Web Services).
-.Réseau : VPC unique avec un sous-réseau privé 10.0.1.0/24.
-.Serveur Zabbix : Instance Ubuntu exécutant Zabbix Server sous Docker.
-.Clients monitorés :
-.Instance Linux (Ubuntu) - Agent Zabbix.
-.Instance Windows Server - Agent Zabbix.
+## 🏗️ Architecture de l'Infrastructure
+* **Fournisseur Cloud :** Amazon Web Services (AWS).
+* **Réseau :** Déploiement au sein d'un VPC avec un adressage privé en `10.0.1.0/24`.
+* **Serveur de Monitoring :** Zabbix Server déployé via Docker sur une instance Linux.
+* **Nœuds supervisés :**
+    * **Serveur Zabbix :** Auto-monitoring du conteneur Linux.
+    * **Client_Linux_Zabbix :** Instance Ubuntu avec Agent Zabbix.
+    * **Client_Windows_Zabbix :** Instance Windows Server (IP : `10.0.1.79`) avec Agent Zabbix.
 
-🔒 Configuration de la Sécurité (AWS Security Groups)
-Pour permettre la communication entre le serveur et les agents, les règles entrantes suivantes ont été configurées :
+## 🔒 Configuration de la Sécurité (AWS Security Groups)
+Les flux réseau ont été sécurisés via des Security Groups AWS pour autoriser uniquement les ports nécessaires :
+* **TCP 10050 :** Trafic entrant pour les agents Zabbix (Zabbix Agent Listen Port).
+* **TCP 80 :** Accès HTTP à l'interface Dashboard de Zabbix.
+* **TCP 22 & 3389 :** Accès de gestion à distance SSH (Linux) et RDP (Windows).
 
-TCP 10050 - 10051 : Flux Zabbix Agent (Communication serveur/agents).
+## 🚀 Mise en œuvre technique
 
-TCP 80 / 443 : Accès à l'interface Web Zabbix.
+### Configuration de l'Agent Windows
+Pour permettre la remontée des données depuis l'instance Windows EC2, les étapes suivantes ont été réalisées :
+1. Installation de l'Agent Zabbix sur l'instance `10.0.1.79`.
+2. Configuration du pare-feu Windows Defender pour autoriser le port 10050.
+3. Résolution des erreurs de service via PowerShell pour assurer le statut **Running** de l'agent.
 
-TCP 22 & 3389 : Administration à distance (SSH & RDP).
-
-🚀 Installation et Configuration
-1. Serveur Zabbix (Docker)
-Déploiement du serveur sur l'instance Linux via Docker Compose pour une gestion simplifiée des conteneurs (Zabbix Server, Web Interface, et Database).
-
-2. Agent Windows (EC2)
-L'agent a été installé directement sur l'instance Windows 10.0.1.79. Pour résoudre les problèmes de connectivité initiaux ("Timed out"), une règle spécifique a été ajoutée au pare-feu interne de Windows via PowerShell :
-
-PowerShell
-
-# Commande utilisée pour autoriser le trafic Zabbix sur l'instance Windows
+```powershell
+# Commande d'ouverture du port dans le pare-feu interne
 New-NetFirewallRule -DisplayName "Zabbix_Agent" -Direction Inbound -LocalPort 10050 -Protocol TCP -Action Allow
-Restart-Service "Zabbix Agent"
-📊 Résultats du Monitoring
-Le tableau de bord final confirme la réussite du déploiement avec une disponibilité totale du parc :
-
-Status : Les 3 hôtes sont marqués comme "Available" (Icônes ZBX au vert).
-
-Télémétrie : Remontée active des données de CPU, RAM et état des services système.
-
-📸 Captures d'écran du projet
-Configuration des Security Groups (AWS)
-(Insère ici ton image_d0cb0c.png)
-
-Configuration de l'Agent sur Windows Server
-(Insère ici ton image_d13f72.jpg)
-
-Dashboard Final de Supervision
-(Insère ici ton image_d1b42f.jpg)
