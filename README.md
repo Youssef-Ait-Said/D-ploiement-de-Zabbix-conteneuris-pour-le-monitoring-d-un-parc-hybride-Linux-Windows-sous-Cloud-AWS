@@ -1,31 +1,31 @@
-# Déploiement de Zabbix conteneurisé pour le monitoring d'un parc hybride (Linux & Windows) sous Cloud AWS
+# Deploiement de Zabbix pour le monitoring d un parc hybride sur AWS
 
-## 📝 Description du projet
-Ce projet consiste en la mise en œuvre d'une architecture de supervision centralisée utilisant **Zabbix 7.0**. L'objectif est de monitorer en temps réel les performances et la disponibilité d'un parc informatique hybride (Linux & Windows) hébergé sur des instances **Amazon EC2**.
+## Description du projet
+Ce projet consiste en la mise en oeuvre d une architecture de supervision centralisee utilisant Zabbix 7.0. L objectif est de surveiller en temps reel les performances et la disponibilite d instances Linux et Windows hebergees sur Amazon EC2.
 
-## 🏗️ Architecture de l'Infrastructure
-* **Fournisseur Cloud :** Amazon Web Services (AWS).
-* **Réseau :** Déploiement au sein d'un VPC avec un adressage privé en `10.0.1.0/24`.
-* **Serveur de Monitoring :** Zabbix Server déployé via Docker sur une instance Linux.
-* **Nœuds supervisés :**
-    * **Serveur Zabbix :** Auto-monitoring du conteneur Linux.
-    * **Client_Linux_Zabbix :** Instance Ubuntu avec Agent Zabbix.
-    * **Client_Windows_Zabbix :** Instance Windows Server (IP : `10.0.1.79`) avec Agent Zabbix.
+## Architecture de l infrastructure
+* Fournisseur Cloud : Amazon Web Services (AWS)
+* Reseau : Deploiement dans un VPC avec un adressage prive en 10.0.1.0/24
+* Serveur de Monitoring : Zabbix Server installe via Docker sur une instance Ubuntu
+* Hotes supervises :
+    * Client_Linux_Zabbix : Instance Ubuntu avec Agent Zabbix
+    * Client_Windows_Zabbix : Instance Windows Server avec Agent Zabbix (10.0.1.79)
 
-## 🔒 Configuration de la Sécurité (AWS Security Groups)
-Les flux réseau ont été sécurisés via des Security Groups AWS pour autoriser uniquement les ports nécessaires :
-* **TCP 10050 :** Trafic entrant pour les agents Zabbix (Zabbix Agent Listen Port).
-* **TCP 80 :** Accès HTTP à l'interface Dashboard de Zabbix.
-* **TCP 22 & 3389 :** Accès de gestion à distance SSH (Linux) et RDP (Windows).
+## Configuration de la securite (AWS Security Groups)
+Les flux reseau sont autorises via les Security Groups AWS pour les ports suivants :
+* TCP 10050 : Communication entrante vers les agents Zabbix
+* TCP 80/443 : Acces a l interface Web Zabbix
+* TCP 22 / 3389 : Flux d administration SSH et RDP
 
-## 🚀 Mise en œuvre technique
+## Mise en oeuvre technique
 
-### Configuration de l'Agent Windows
-Pour permettre la remontée des données depuis l'instance Windows EC2, les étapes suivantes ont été réalisées :
-1. Installation de l'Agent Zabbix sur l'instance `10.0.1.79`.
-2. Configuration du pare-feu Windows Defender pour autoriser le port 10050.
-3. Résolution des erreurs de service via PowerShell pour assurer le statut **Running** de l'agent.
+### 1. Configuration du Client Linux
+L agent a ete deploye sur l instance Ubuntu selon les etapes suivantes :
+* Installation du paquet zabbix-agent via le gestionnaire de paquets
+* Modification du fichier /etc/zabbix/zabbix_agentd.conf pour renseigner l IP du serveur Zappix
+* Activation et demarrage du service zabbix-agent
 
-```powershell
-# Commande d'ouverture du port dans le pare-feu interne
-New-NetFirewallRule -DisplayName "Zabbix_Agent" -Direction Inbound -LocalPort 10050 -Protocol TCP -Action Allow
+### 2. Configuration du Client Windows
+L agent a ete deploye sur l instance Windows Server avec les etapes suivantes :
+* Installation de l agent Zabbix via l installeur MSI
+* Configuration du Hostname (Client_Windows_Zabbix) et de l IP du serveur Zappix
